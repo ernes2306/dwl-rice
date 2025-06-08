@@ -29,8 +29,8 @@ static int log_level = WLR_ERROR;
 /* Autostart */
 static const char *const autostart[] = {
         "wbg", "/home/ernes/Downloads/wallhaven-nmdo5m.jpg", NULL,
-        "wlr-randr", "--output", "HDMI-A-1", "--mode", "1920x1080@144Hz", NULL,
-        "artix-pipewire-loader", NULL,
+        "gentoo-pipewire-launcher", NULL,
+        "exec", "/usr/libexec/xdg-desktop-portal-wlr", "-wlr", NULL,
         NULL /* terminate */
 };
 
@@ -58,12 +58,15 @@ static const Layout layouts[] = {
 */
 /* NOTE: ALWAYS add a fallback rule, even if you are completely sure it won't be used */
 static const MonitorRule monrules[] = {
-	/* name       mfact  nmaster scale layout       rotate/reflect                x    y */
-	/* example of a HiDPI laptop monitor:
-	{ "eDP-1",    0.5f,  1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },
+	/* name       mfact nmaster scale layout       rotate/reflect              x  y  resx resy rate mode adaptive*/
+	/* example of a HiDPI laptop monitor at 120Hz:
+	{ "eDP-1",    0.5f,  1,      2,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL, 0, 0, 0, 0, 120.000f, 1, 1},
+	* mode let's the user decide on how dwl should implement the modes:
+	* -1 Sets a custom mode following the users choice
+	* All other number's set the mode at the index n, 0 is the standard mode; see wlr-randr
 	*/
 	/* defaults */
-	{ NULL,       0.55f, 1,      1,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL,   -1,  -1 },
+	{ "HDMI-A-1",       0.55f, 1,      1,    &layouts[0], WL_OUTPUT_TRANSFORM_NORMAL, -1, -1, 0, 0, 144.0f, 1 ,0},
 };
 
 /* keyboard */
@@ -135,7 +138,7 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
-static const char *termcmd[] = { "wayst", NULL };
+static const char *termcmd[] = { "alacritty", NULL };
 static const char *menucmd[] = { "wmenu-run", NULL };
 
 static const Key keys[] = {
